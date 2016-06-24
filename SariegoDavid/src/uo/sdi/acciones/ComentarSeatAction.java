@@ -23,11 +23,12 @@ public class ComentarSeatAction implements Accion {
     public String execute(HttpServletRequest request,
 	    HttpServletResponse response) {
 
-	String tripId = request.getParameter("tripId"); 
-	String userId = request.getParameter("userId"); //about user
+	String tripId = request.getParameter("tripId");
+	String userId = request.getParameter("userId"); // about user
 	String comentarioSeat = request.getParameter("comentarioSeat");
 	String valoracion = request.getParameter("valoracionSeat");
-	User user = (User) request.getSession().getAttribute("user"); //from user
+	User user = (User) request.getSession().getAttribute("user"); // from
+								      // user
 
 	RatingDao rd = PersistenceFactory.newRatingDao();
 	TripDao td = PersistenceFactory.newTripDao();
@@ -58,6 +59,18 @@ public class ComentarSeatAction implements Accion {
 	    request.setAttribute("mensaje",
 		    "Un usuario no puede comentarse a si mismo");
 	    Log.error("Un usuario no puede comentarse a si mismo");
+	    pasarValores(request, user, rd, td, ad, tId);
+	    return "FRACASO";
+	}
+
+	if (PersistenceFactory.newSeatDao()
+		.findByUserAndTrip(user.getId(), tId) == null
+		&& !td.findById(tId).getPromoterId().equals(user.getId())) {
+	    request.setAttribute("mensaje",
+		    "El usuario que intenta realizar la  "
+			    + "valoración no participa en el viaje");
+	    Log.error("El usuario que intenta realizar la  "
+		    + "valoración no participa en el viaje");
 	    pasarValores(request, user, rd, td, ad, tId);
 	    return "FRACASO";
 	}

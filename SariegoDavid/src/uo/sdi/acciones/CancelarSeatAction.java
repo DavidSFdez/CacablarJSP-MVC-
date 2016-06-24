@@ -68,7 +68,7 @@ public class CancelarSeatAction implements Accion {
 
 	sd.update(seat);
 
-	if (trip.getAvailablePax() == 0)
+	if (trip.getAvailablePax() == 0 && trip.isActive())
 	    trip.setStatus(TripStatus.OPEN);
 	trip.setAvailablePax(trip.getAvailablePax() + 1);
 	td.update(trip);
