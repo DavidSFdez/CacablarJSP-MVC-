@@ -11,7 +11,7 @@
 			<tr>
 				<td align="right">id: ${trip.id}</td>
 				<td><input type="text" name="idTrip" size="15"
-					required="required" value="${trip.id}" hidden="hidden" /></td>
+					value="${trip.id}" hidden="hidden" /></td>
 			</tr>
 			<tr>
 				<td align="right">Calle salida</td>

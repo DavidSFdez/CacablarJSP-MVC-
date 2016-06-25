@@ -1,5 +1,7 @@
 package uo.sdi.acciones;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -91,9 +93,13 @@ public class SolicitarPlazaAction implements Accion {
     private void pasarValores(HttpServletRequest request, Long tId, Long userId) {
 	Trip trip = PersistenceFactory.newTripDao().findById(tId);
 	ApplicationDao ad = PersistenceFactory.newApplicationDao();
+	SeatDao sd = PersistenceFactory.newSeatDao();
+	
 	Long[] ids = { userId, tId };
 	Application application = ad.findById(ids);
-
+	List<Seat> seats = sd.findByTrip(tId);
+	
+	request.setAttribute("seats", seats);
 	request.setAttribute("application", application);
 	request.setAttribute("trip", trip);
     }

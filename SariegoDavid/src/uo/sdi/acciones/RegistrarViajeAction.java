@@ -151,6 +151,7 @@ public class RegistrarViajeAction implements Accion {
 	    } else {
 
 		Trip trip = new Trip();
+		if(tripId!=null && !tripId.equals(""))
 		trip.setId(Long.parseLong(tripId));
 		trip.setArrivalDate(fechaDestino);
 		trip.setAvailablePax(nPlazas);
@@ -180,10 +181,15 @@ public class RegistrarViajeAction implements Accion {
 		    request.setAttribute("mensaje",
 			    "Viaje modificado con exito");
 		} else {
-		    td.save(trip);
+		   Long id = td.save(trip);
 		    Seat seat = new Seat();
+		    seat.setComment("promotor");
+		    seat.setStatus(SeatStatus.ACCEPTED);
+		    seat.setTripId(id);
+		    seat.setUserId(user.getId());
+		    PersistenceFactory.newSeatDao().save(seat);
 		    request.setAttribute("mensaje",
-			    "Viaje registrado con exito");
+			    "Viaje registrado con exito con id: "+id);
 		}
 
 	    }

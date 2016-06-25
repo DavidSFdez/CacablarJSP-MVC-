@@ -1,14 +1,17 @@
 package uo.sdi.acciones;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import alb.util.log.Log;
 import uo.sdi.model.Seat;
 import uo.sdi.model.Trip;
 import uo.sdi.model.User;
 import uo.sdi.persistence.ApplicationDao;
 import uo.sdi.persistence.PersistenceFactory;
+import uo.sdi.persistence.SeatDao;
+import alb.util.log.Log;
 
 public class CancelarSolicitudAction implements Accion {
 
@@ -21,7 +24,7 @@ public class CancelarSolicitudAction implements Accion {
 	Long tId = null;
 	if (tripId != null && !tripId.equals("")) {
 	    tId = Long.parseLong(tripId);
-	  
+
 	}
 
 	if (tripId == null || tripId.trim().equals("") || user == null) {
@@ -31,12 +34,12 @@ public class CancelarSolicitudAction implements Accion {
 	}
 
 	Trip trip = PersistenceFactory.newTripDao().findById(tId);
-	if (trip==null || !trip.isActive()){
+	if (trip == null || !trip.isActive()) {
 	    Log.error("Viaje nulo o ya cerrado");
 	    pasarValores(request, tId, user);
 	    return "FRACASO";
 	}
-	
+
 	ApplicationDao ad = PersistenceFactory.newApplicationDao();
 
 	Long[] ids = { user.getId(), tId };
@@ -46,14 +49,15 @@ public class CancelarSolicitudAction implements Accion {
 	pasarValores(request, tId, user);
 
 	Log.debug("Solicitud cancelada con exito");
-	
+
 	return "EXITO";
     }
 
     private void pasarValores(HttpServletRequest request, Long tId, User user) {
+	SeatDao sd = PersistenceFactory.newSeatDao();
 	Trip trip = PersistenceFactory.newTripDao().findById(tId);
-	Long[] ids = { user.getId(), tId };
-	Seat seat = PersistenceFactory.newSeatDao().findById(ids);
+	List<Seat> seats = sd.findByTrip(tId);
+	request.setAttribute("seats", seats);
 	request.setAttribute("trip", trip);
     }
 }

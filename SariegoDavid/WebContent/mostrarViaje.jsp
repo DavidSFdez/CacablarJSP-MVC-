@@ -58,7 +58,6 @@
 		</c:if>
 
 		<!--  si el usuario es promotor -->
-		<!--  Cancelar asientos -->
 
 		<table border="1">
 			<tr>
@@ -76,7 +75,7 @@
 					<td>${entry.comment}</td>
 					<td>${entry.status}</td>
 					<c:if
-						test="${entry.status.accepted and user.id==trip.promoterId and trip.active}">
+						test="${entry.status.accepted and user.id==trip.promoterId and trip.active and entry.userId!=trip.promoterId}">
 						<form
 							action="cancelarSeat?tripId=${entry.tripId}&userId=${entry.userId}"
 							method="post">
